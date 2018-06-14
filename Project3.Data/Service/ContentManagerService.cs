@@ -20,13 +20,15 @@ namespace Project3.Data.Service
             this._project3DB = _project3DB;
         }
 
+        #region 新增内容
         public Task<Contents> AddAsync(Contents _contents)
         {
             return _project3DB.AddAsync(_contents);
         }
+        #endregion
 
 
-
+        #region 更新内容
         public async Task<Contents> UpdateAsync(Contents _contents)
         {
 
@@ -39,7 +41,9 @@ namespace Project3.Data.Service
                 return await _project3DB.AddAsync(_contents);
             }
         }
+        #endregion
 
+        #region 获取分页内容列表
         public async Task<PaginatedList<Contents>> GetContentsAsync(int status, string searchstring, int metaid, int? pageindex, int pagesize, int type)
         {
             var data = from s in _project3DB.Contents.Where(m => m.type == type) select s;
@@ -68,7 +72,9 @@ namespace Project3.Data.Service
             return await PaginatedList<Contents>.CreateAsync(data.AsNoTracking(), pageindex ?? 1, pagesize);
 
         }
+        #endregion
 
+        #region 通过标识id批量删除内容
         public async Task<int> DeleteByCidAsync(int[] cid)
         {
             foreach (int id in cid)
@@ -81,20 +87,34 @@ namespace Project3.Data.Service
             }
             return await _project3DB.SaveChangesAsync();
         }
+        #endregion
 
-        public async Task<Contents> GetByCidAsync(int cid)
+
+        #region 通过标识id获取一条内容
+        public async Task<Contents> GetByCidAsync(int cid, bool isadmin = true)
         {
-            return await _project3DB.Contents.Where(m => m.cid == cid).SingleOrDefaultAsync();
+            if (isadmin)
+            {
+                return await _project3DB.Contents.Where(m => m.cid == cid).SingleOrDefaultAsync();
+            }
+            else
+            {
+                return await _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
 
+            }
         }
+        #endregion
 
+        #region 通过标识id获取内容所有分类/标签
         public async Task<IList<Metas>> GetMetasAsync(int cid)
         {
             var metas = (from s in _project3DB.Metas join r in _project3DB.Relationships on s.mid equals r.mid where r.cid == cid select s);
 
             return await metas.ToListAsync();
         }
+        #endregion
 
+        #region 通过标识id更新内容分类/标签
         public async Task UpdateMetasByCidAsync(int cid, string[] name, int type)
         {
             var metas = new List<Metas>();
@@ -148,10 +168,12 @@ namespace Project3.Data.Service
             }
             await _project3DB.SaveChangesAsync();
         }
+        #endregion
 
+        #region 获取归档内容列表
         public async Task<Dictionary<string, IList<Contents>>> GetArchivesAsync()
         {
-            var data = await (from s in _project3DB.Contents select s).Select(s => new Contents { cid = s.cid, title = s.title, createtime = s.createtime }).OrderByDescending(m => m.createtime).ToListAsync();
+            var data = await (from s in _project3DB.Contents.Where(m => m.type == 0 && m.status == 0) select s).Select(s => new Contents { cid = s.cid, title = s.title, createtime = s.createtime }).OrderByDescending(m => m.createtime).ToListAsync();
 
             var resultdata = new Dictionary<string, IList<Contents>>();
             foreach (var content in data)
@@ -169,17 +191,25 @@ namespace Project3.Data.Service
 
             return resultdata;
         }
+        #endregion
 
+        #region 通过标识id获取页面内容（仅读取标识id、标题、内容）
         public async Task<Contents> GetPageByCidAsync(int cid)
         {
-            var data = await _project3DB.Contents.Where(m => m.cid == cid && m.type == 1).Select(m => new Contents { title = m.title, content = m.content }).SingleOrDefaultAsync();
+            var data = await _project3DB.Contents.Where(m => m.cid == cid && m.type == 1)
+                .Select(m => new Contents { title = m.title, content = m.content }).SingleOrDefaultAsync();
             return data;
         }
+        #endregion
 
+        #region 获取所有页面列表（仅读取标识id、标题）
         public async Task<IList<Contents>> GetPageListAsync()
         {
-            var data = await (from s in _project3DB.Contents.Where(m => m.type == 1).OrderByDescending(m => m.index).ThenByDescending(m => m.createtime) select s).ToListAsync();
+            var data = await (from s in _project3DB.Contents.Where(m => m.type == 1).OrderByDescending(m => m.index).ThenByDescending(m => m.createtime) select s)
+                .Select(m => new Contents { cid = m.cid, title = m.title, content = m.content })
+                .ToListAsync();
             return data;
         }
+        #endregion
     }
 }

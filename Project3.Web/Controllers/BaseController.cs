@@ -12,7 +12,8 @@ namespace Project3.Web.Controllers
     [ActionErrorFilter]
     public class BaseController : Controller
     {
-        
+        public bool IsError { get; set; } = false;
+        public string Error { get; set; } = "服务器内部错误，请返回。";
        
     }
 }

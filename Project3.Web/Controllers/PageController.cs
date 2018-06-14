@@ -10,10 +10,10 @@ namespace Project3.Web.Controllers
 {
     public class PageController : BaseController
     {
-        private readonly IContentManagerService cms;
-        public PageController(IContentManagerService cms)
+        private readonly IPageCache pageCache;
+        public PageController(IPageCache pageCache)
         {
-            this.cms = cms;
+            this.pageCache = pageCache;
 
         }
 
@@ -21,7 +21,7 @@ namespace Project3.Web.Controllers
         public async Task<IActionResult> Index(int cid)
         {
             var VM = new IndexViewModel();
-            VM.content = await cms.GetPageByCidAsync(cid);
+            VM.content = await pageCache.GetByCid(cid);
             ViewData.Model = VM;
             return View();
         }

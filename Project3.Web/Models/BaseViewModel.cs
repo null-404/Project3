@@ -7,6 +7,5 @@ namespace Project3.Web.Models
 {
     public class BaseViewModel
     {
-       
     }
 }

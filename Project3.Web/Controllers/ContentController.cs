@@ -27,9 +27,13 @@ namespace Project3.Web.Controllers
         [Theme]
         public async Task<IActionResult> Index(int cid)
         {
-            
+
             var VM = new IndexViewModel();
-            VM.content = await cms.GetByCidAsync(cid);
+            VM.content = await cms.GetByCidAsync(cid, false);
+            if (VM.content == null)
+            {
+                IsError = true;
+            }
             VM.metas = await cms.GetMetasAsync(cid);
             ViewData.Model = VM;
 

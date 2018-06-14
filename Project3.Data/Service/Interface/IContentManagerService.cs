@@ -15,15 +15,15 @@ namespace Project3.Data.Service.Interface
 
         Task<Contents> UpdateAsync(Contents _contents);
 
-        Task<PaginatedList<Contents>> GetContentsAsync(int status,string searchstring,int category,int? pageindex,int pagesize,int type);
+        Task<PaginatedList<Contents>> GetContentsAsync(int status, string searchstring, int category, int? pageindex, int pagesize, int type);
 
         Task<int> DeleteByCidAsync(int[] cid);
 
-        Task<Contents> GetByCidAsync(int cid);
+        Task<Contents> GetByCidAsync(int cid, bool isadmin = true);
 
         Task<IList<Metas>> GetMetasAsync(int cid);
 
-        Task UpdateMetasByCidAsync(int cid,string[] name, int type);
+        Task UpdateMetasByCidAsync(int cid, string[] name, int type);
 
         Task<Dictionary<string, IList<Contents>>> GetArchivesAsync();
 
