@@ -1,0 +1,55 @@
+﻿@model Project3.Web.Models.Content.IndexViewModel;
+@{
+    //内容页
+
+    ViewData["Title"] = "apollo";
+
+    Layout = "~/Views/Shared/apollo/_Layout.cshtml";
+}
+
+<div class="post">
+    <article class="post-block">
+        <h1 class="post-title">@Model.content.title</h1>
+        <div class="post-info">
+            @Model.content.createtime.ToString("MMM d, yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-GB"))
+            <!--分类-->
+            @{
+                foreach (var category in Model.metas.Where(m => m.type == 0))
+                {
+                    <a asp-controller="default" asp-action="index" asp-route-mid="@category.mid" class="category">@category.name</a>
+
+                }
+            }
+
+        </div>
+        <div class="post-content">
+            <!--摘要-->
+            <p>@Model.content.excerpt</p>
+            <a id="more"></a>
+            <!--正文-->
+            <div id="content">@Model.content.content</div>
+            
+        </div>
+
+        <!--标签-->
+        <div class="tag" style="margin-top:1rem;">
+            @{
+                foreach (var tag in Model.metas.Where(m => m.type == 1))
+                {
+                    <a asp-controller="default" asp-action="index" asp-route-mid="@tag.mid">@tag.name</a>
+
+                }
+            }
+
+        </div>
+    </article>
+</div>
+
+@section scripts{ 
+    <script>
+        var converter = new showdown.Converter({ tables: "true", tasklists: "true", emoji:"true"});
+        var content = document.getElementById("content");
+        var html = converter.makeHtml(content.innerHTML);
+        content.innerHTML = html;
+    </script>
+}

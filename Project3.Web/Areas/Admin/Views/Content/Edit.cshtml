@@ -1,0 +1,262 @@
+﻿@model ContentEditViewModel;
+@{
+    if (Model.content.cid == 0)
+    {
+        ViewData["Title"] = Model.Type == 0 ? "撰写文章" : "创建空白页面";
+
+    }
+    else
+    {
+        ViewData["Title"] = Model.Type == 0 ? "编辑文章" : "编辑页面";
+
+
+    }
+    var isPageHidden = Model.Type == 1 ? "hidden" : "";
+    var isArticleHidden= Model.Type == 0 ? "hidden" : "";
+}
+<script>
+    var cid =@Model.content.cid;
+    var type =@Model.Type;
+
+</script>
+
+
+<form role="form">
+
+    <!-- 插入链接（Modal） -->
+    <div class="modal" id="linkmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">插入超链接</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">链接</label>
+                        <input type="url" class="form-control" rows="2" placeholder="" id="link" />
+                    </div>
+                    <div class="form-group">
+                        <label for="name">描述</label>
+                        <input type="text" class="form-control" rows="2" placeholder="" id="link_describe" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="btns-insertlink" data-dismiss="modal">插入</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 插入图片（Modal） -->
+    <div class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">插入图片</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">链接</label>
+                        <input type="url" class="form-control" rows="2" placeholder="" id="imageurl" />
+                    </div>
+                    <div class="form-group">
+                        <label for="name">描述</label>
+                        <input type="text" class="form-control" rows="2" placeholder="" id="imageurl_describe" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="btns-insertimage" data-dismiss="modal">插入</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+
+                <input type="text" class="form-control" placeholder="标题" value="@Model.content.title" name="title">
+            </div>
+            <div class="form-group @isPageHidden">
+                <label for="name">摘要</label>
+                <textarea class="form-control" rows="2" placeholder="" name="excerpt">@Model.content.excerpt</textarea>
+            </div>
+            <div class="form-group">
+
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-default" onclick="javascript: $('#linkmodal').modal('show');"><span class="glyphicon glyphicon-link"></span></button>
+                    <button type="button" class="btn btn-default" onclick="javascript: $('#imagemodal').modal('show');"><span class="glyphicon glyphicon-camera"></span></button>
+                    <button id="ui_btns_bold" type="button" class="btn btn-default"><span class="glyphicon glyphicon-bold"></span></button>
+                    <button id="ui_btns_italic" type="button" class="btn btn-default"><span class="glyphicon glyphicon-italic"></span></button>
+                    <button id="ui_btns_ordered_list" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list"></span></button>
+
+                </div>
+                <textarea id="md" class="form-control" rows="12" placeholder="" style="margin-top:10px;" name="content">@Model.content.content</textarea>
+            </div>
+            <div class="form-group pull-right">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-primary" id="submit" data-loading-text="正在提交...">提交发布</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <ul id="myTab" class="nav nav-tabs">
+                <li class="active width-50">
+                    <a href="#options" data-toggle="tab">选项</a>
+                </li>
+                <li class="width-50">
+                    <a href="#files" data-toggle="tab">
+                        附件
+                        @{
+                            if (Model.files.Count > 0)
+                            {
+                                <span class="badge bg-yellow radius" id="totalfiles">@Model.files.Count</span>
+
+                            }
+                        }
+                    </a>
+
+                </li>
+
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <!--发布选项-->
+                <div class="tab-pane fade in active" id="options">
+                    <div class="form-group" style="margin-top:10px;">
+                        <label for="name">头图</label>
+                        <input type="text" class="form-control" placeholder="http://" value="@Model.content.banner" name="banner">
+                    </div>
+                    <div class="form-group @isArticleHidden">
+                        <label for="name">排序</label>
+                        <input type="number" class="form-control" value="@Model.content.index" name="index">
+                        <p class="help-block">页面输出会根据排序从大到小排序</p>
+                    </div>
+                    <div class="form-group @isPageHidden" style="margin-top:10px;">
+                        <label for="name">分类</label>
+                        <select id="category" class="form-control" name="category" multiple="multiple">
+
+                            @{
+                foreach (var category in Model.metas.Where(m => m.type == 0))
+                {
+
+                    if (Model.selectedmetas.Contains(category))
+                    {
+
+                        <option value="@category.name" selected="selected">@category.name</option>
+
+    }
+    else
+    {
+                <option value="@category.name">@category.name</option>
+
+
+}
+
+}
+                            }
+                        </select>
+                        <p class="help-block">输入回车可创建</p>
+                    </div>
+                    <div class="form-group @isPageHidden" style="margin-top:10px;">
+                        <label for="name">标签</label>
+                        <select id="tag" class="form-control" name="tags" multiple="multiple">
+                            @{
+                foreach (var tag in Model.metas.Where(m => m.type == 1))
+                {
+                    if (Model.selectedmetas.Contains(tag))
+                    {
+
+                        <option value="@tag.name" selected="selected">@tag.name</option>
+
+    }
+    else
+    {
+                <option value="@tag.name">@tag.name</option>
+
+
+}
+
+}
+                            }
+                        </select>
+                        <p class="help-block">输入回车可创建</p>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" @(Model.content.allowcomment == 0 ? "checked=\"checked\"" : "") id="allowcomment">允许评论
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" @(Model.content.status == 0 ? "checked=\"checked\"" : "") id="status">显示
+                        </label>
+                    </div>
+                </div>
+                <!--附件-->
+                <div class="tab-pane fade" id="files">
+                    <div class="form-group" style="margin-top:10px;">
+                        <button type="button" class="btn btn-default" id="btn-uploadfile" data-loading-text="正在上传请等待...">
+                            <span class="glyphicon glyphicon-upload"></span> 上传文件
+                        </button>
+                        <input id="File" name="fileupload" accept="image/gif, image/jpeg,image/png" multiple="multiple" type="file" value="" style="display:none;" />
+                    </div>
+                    <div class="form-group">
+
+                        <ul class="list-group">
+
+                            @{
+                                foreach (var file in Model.files)
+                                {
+                                    <li class="list-group-item" data-fid="@file.fid">
+
+                                        <a data-toggle="tooltip"
+                                           data-placement="top" title="@file.filepath" data-trigger="click">@(file.filename)</a>
+                                        (@file.size)
+
+                                        <a data-action="delete" data-fid="@file.fid" class="pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                                    </li>
+
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("[data-toggle='tooltip']").tooltip();
+            $('#category').select2({
+                tags: true
+            });
+            $('#tag').select2({
+                tags: true
+            });
+            $('.modal').on('hidden.bs.modal', function () {
+                $("#md").focus();
+            });
+            $("#btn-uploadfile").click(function () {
+                $("#File").click();
+
+            });
+            $("input[type=file]").change(function (e) {
+                uploadfile();
+            })
+        });
+    </script>
+    <!--markdown输入-->
+    <script src="~/admin/js/md.js" asp-append-version="true"></script>
+    <!--附件管理-->
+    <script src="~/admin/js/files.js" asp-append-version="true"></script>
+    <!--表单提交-->
+    <script src="~/admin/js/edit.js" asp-append-version="true"></script>
+}

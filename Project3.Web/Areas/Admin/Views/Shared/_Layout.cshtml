@@ -1,0 +1,138 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+@{
+    AlertModel alert = null;
+    if (TempData["alert"] != null)
+    {
+        alert = JsonConvert.DeserializeObject<AlertModel>(TempData["alert"].ToString());
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Project3管理后台</title>
+    <link rel="stylesheet" href="~/lib/select2-4.0.6/dist/css/select2.min.css" asp-append-version="true" />
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/admin/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/admin/css/site.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-controller="Default" asp-action="Index" class="navbar-brand">Project3.Admin</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a asp-controller="Default" asp-action="Index">控制台</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            创建
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="content" asp-action="edit" asp-route-type="0">撰写文章</a></li>
+                            <li><a asp-controller="content" asp-action="edit" asp-route-type="1">创建空白页面</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            管理
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="content" asp-action="list" asp-route-type="0">文章</a></li>
+                            <li><a asp-controller="content" asp-action="list" asp-route-type="1">页面</a></li>
+                            <li><a asp-controller="comment" asp-action="list">评论</a></li>
+                            <li><a asp-controller="metas" asp-action="list">分类与标签</a></li>
+                            <li><a asp-controller="files" asp-action="list">附件</a></li>
+
+                        </ul>
+                    </li>
+                    <li><a asp-controller="options" asp-action="Index">站点设置</a></li>
+                    <li><a asp-controller="default" asp-action="refcache">更新缓存</a></li>
+
+                </ul>
+                <!--向右对齐-->
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            @HttpContextAccessor.HttpContext.User.Identity.Name <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="default" asp-action="UserSetting">设置</a></li>
+                            <li><a asp-controller="default" asp-action="LoginOut">退出</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+                <p class="navbar-text navbar-right">当前</p>
+
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        <h4 style="font-weight:bold;margin:20px 0;">@ViewData["Title"]</h4>
+        <!--警告消息-->
+        @if (alert != null)
+        {
+            <div class="alert alert-@alert.Level.ToString().ToLower() alert-dismissable in">
+                <button type="button" class="close" data-dismiss="alert"
+                        aria-hidden="true">
+                    &times;
+                </button>
+                @alert.Content
+            </div>
+        }
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - Project3管理后台</p>
+        </footer>
+    </div>
+    @* 开发环境内容 *@
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+
+    </environment>
+    @* 开发环境以外的内容 *@
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+
+    </environment>
+    <script src="~/lib/select2-4.0.6/dist/js/select2.min.js" asp-append-version="true"></script>
+    <script src="~/admin/js/project3.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

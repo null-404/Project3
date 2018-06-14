@@ -1,0 +1,113 @@
+﻿@model FilesListViewModel;
+@{
+    ViewData["Title"] = "附件管理";
+}
+
+
+
+
+<form method="get">
+
+
+
+
+    <div style="background-color:#fff;padding:10px 20px;">
+        <table class="table table-hover">
+
+            <thead>
+                <tr>
+                    <th><input type="checkbox" /></th>
+                    <th>文件名</th>
+                    <th>链接</th>
+                    <th>大小</th>
+                    <th>归属</th>
+                    <th>上传时间</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.files)
+                {
+
+                    <tr>
+                        <td><input type="checkbox" name="fid" value="@file.fid" /></td>
+
+                        <td>@file.filename</td>
+                        <td>@file.filepath</td>
+                        <td>@file.size</td>
+                        <td>
+                            @{
+
+                                if (file.cid > 0)
+                                {
+                                    <a asp-controller="content" asp-action="edit" asp-route-cid="@file.cid">
+                                        @(await Model.contentExtension.GetTitleByCid(file.cid))
+                                    </a>
+
+                                }
+                                else
+                                {
+                                    @("未归档")
+
+                                }
+                            }
+                        </td>
+                        <td>@file.createtime</td>
+
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="table-toolbar clearfix row" style="margin-top:10px;">
+        <div class="col-md-5">
+            <div class="btn-group">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        选中项
+                        <b class="caret"></b>
+                    </button>
+                    <ul class="dropdown-menu action" aria-labelledby="dropdownMenuButton">
+                        <li>
+                            <a data-tip="请确认是否删除所选项" asp-action="Delete_Post">删除</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!--分页处理-->
+        @{
+            var prevDisabled = !Model.files.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.files.HasNextPage ? "disabled" : "";
+        }
+        @{
+            if (Model.files.TotalPages > 1)
+            {
+                <div class="col-md-7 text-right">
+                    <ul class="pagination pagination-sm" style="margin:0;">
+                        <li class="page-item @prevDisabled">
+                            <a class="page-link"
+                               asp-route-pageindex="@(Model.pageindex - 1)">上页</a>
+                        </li>
+                        <li class="page-item"><span>@(Model.files.PageIndex)/@(Model.files.TotalPages)</span></li>
+
+                        <li class="page-item @nextDisabled">
+                            <a class="page-link"
+                               asp-route-pageindex="@(Model.pageindex + 1)">下页</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+</form>
+
+
+
+
+

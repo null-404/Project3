@@ -1,0 +1,34 @@
+﻿@model Project3.Data.Models.Users;
+@{
+    ViewData["Title"] = "用户设置";
+}
+
+<form asp-action="UserSettingPost" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="name">登录名</label>
+                <input type="text" class="form-control" placeholder="" value="@Model.username" asp-for="username">
+            </div>
+            <div class="form-group">
+                <label for="name">密码</label>
+                <input type="password" class="form-control" placeholder="" name="password" asp-for="password">
+            </div>
+            <div class="form-group">
+                <label for="name">重复密码</label>
+                <input type="password" class="form-control" placeholder="" name="repassword">
+            </div>
+            <div class="form-group">
+                <label for="name">确认当前密码</label>
+                <input type="password" class="form-control" placeholder="" name="checkpassword">
+
+            </div>
+            
+            <div class="form-group">
+
+                <button type="submit" class="btn btn-primary">更新设置</button>
+
+            </div>
+        </div>
+    </div>
+</form>

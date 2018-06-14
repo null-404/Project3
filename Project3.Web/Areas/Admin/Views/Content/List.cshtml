@@ -1,0 +1,180 @@
+﻿@model ContentListViewModel;
+
+@{
+    ViewData["Title"] = "管理" + (Model.type == 0 ? "文章" : "页面");
+}
+
+<form method="get">
+    <input type="hidden" value="@Model.type" name="type" />
+
+    <div class="table-toolbar clearfix row">
+        <div class="col-md-2">
+
+            <!--状态筛选按钮组-->
+            <div class="btn-group btn-group-sm">
+
+                @for (int i = -1; i < 2; i++)
+                {
+                    var isactive = "";
+                    if (i == Model.status)
+                    {
+                        isactive = "active";
+
+                    }
+                    var name = i == -1 ? "所有" : i == 0 ? "显示" : "隐藏";
+                    <a class="btn btn-default bg-transparent @isactive" asp-route-status="@i"
+                       asp-route-searchstring="@Model.searchstring"
+                       asp-route-category="@Model.category"
+                       asp-route-type="@Model.type">@name</a>
+
+                }
+
+            </div>
+        </div>
+        <div class="col-md-4">
+
+            <div class="row">
+                <div class="col-md-5 unpadding pd-right-1">
+                    <input class="form-control input-sm" placeholder="检索关键字" name="searchstring" value="@Model.searchstring">
+
+                </div>
+                @{
+                    if (Model.type == 0)
+                    {
+                        <div class="col-md-4 unpadding pd-right-1">
+                            <select class="form-control input-sm" name="category">
+                                <option value="-1">所有分类</option>
+                                @foreach (var meta in Model.metas)
+                                {
+
+                                    if (Model.category == meta.mid)
+                                    {
+
+                                        <option value="@meta.mid" selected="selected">@meta.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@meta.mid">@meta.name</option>
+
+
+                                    }
+
+                                }
+                            </select>
+                        </div>
+
+                    }
+                }
+
+                <div class="col-md-3 unpadding">
+                    <button type="submit" class="btn btn-default btn-sm">搜索</button>
+                    @if (!String.IsNullOrEmpty(Model.searchstring) || Model.category > 0)
+                    {
+                        <a asp-action="List" asp-route-type="@Model.type">重置</a>
+                    }
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div style="background-color:#fff;padding:10px 20px;">
+        <table class="table table-hover">
+
+            <thead>
+                <tr>
+                    <th><input type="checkbox" /></th>
+                    <th>标题</th>
+                    <th>创建</th>
+                    <th>更新</th>
+                    <th>评论</th>
+                    <th>阅读</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var content in Model.contents)
+                {
+
+                    <tr>
+                        <td><input type="checkbox" name="cid" value="@content.cid" /></td>
+                        <td><a asp-action="edit" asp-route-cid="@content.cid"> @content.title</a></td>
+                        <td>@content.createtime</td>
+                        <td>@content.updatetime</td>
+                        <td><span class="badge bg-orange radius">@content.commentsnum</span></td>
+                        <td>@content.readnum</td>
+                        <td>
+                            @{
+                                var status = content.status == 0 ? "显示" : "隐藏";
+                                var statustype = "success";
+                                if (content.status == 1)
+                                {
+                                    statustype = "default";
+
+                                }
+                            }
+                            <span class="label label-@statustype">@status</span>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="table-toolbar clearfix row" style="margin-top:10px;">
+        <div class="col-md-5">
+            <div class="btn-group">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        选中项
+                        <b class="caret"></b>
+                    </button>
+                    <ul class="dropdown-menu action" aria-labelledby="dropdownMenuButton">
+                        <li>
+                            <a data-tip="请确认是否删除所选内容" asp-action="Delete_Post">删除</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!--分页处理-->
+        @{
+            var prevDisabled = !Model.contents.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.contents.HasNextPage ? "disabled" : "";
+        }
+        @{
+            if (Model.contents.TotalPages > 1)
+            {
+                <div class="col-md-7 text-right">
+                    <ul class="pagination pagination-sm" style="margin:0;">
+                        <li class="page-item @prevDisabled">
+                            <a class="page-link"
+                               asp-route-status="@Model.status"
+                               asp-route-searchstring="@Model.searchstring"
+                               asp-route-category="@Model.category"
+                               asp-route-pageindex="@(Model.pageindex - 1)"
+                               asp-route-type="@Model.type">上页</a>
+                        </li>
+                        <li class="page-item"><span>@(Model.contents.PageIndex)/@(Model.contents.TotalPages)</span></li>
+
+                        <li class="page-item @nextDisabled">
+                            <a class="page-link"
+                               asp-route-status="@Model.status"
+                               asp-route-searchstring="@Model.searchstring"
+                               asp-route-category="@Model.category"
+                               asp-route-pageindex="@(Model.pageindex + 1)"
+                               asp-route-type="@Model.type">下页</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+
+
+</form>

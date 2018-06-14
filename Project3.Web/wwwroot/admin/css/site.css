@@ -1,0 +1,207 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: #f6f6f3;
+}
+
+* {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+footer {
+    text-align: center;
+    color: #999;
+}
+
+/*背景颜色扩展*/
+.bg-transparent {
+    background-color: transparent;
+}
+
+
+.table-toolbar {
+    margin-bottom: 15px;
+}
+
+/*去除按钮激活状态阴影*/
+.btn:active, .btn.active {
+    -webkit-box-shadow: unset;
+    box-shadow: unset;
+}
+
+.btn-sm {
+    padding: 5px 15px;
+}
+/*不换行*/
+.inline {
+    display: inline;
+}
+/*内边距*/
+.unpadding {
+    padding: 0;
+}
+
+.pd-left-1 {
+    padding-left: 1rem;
+}
+
+.pd-left-2 {
+    padding-left: 2rem;
+}
+
+.pd-left-3 {
+    padding-left: 3rem;
+}
+
+.pd-left-4 {
+    padding-left: 4rem;
+}
+
+.pd-left-5 {
+    padding-left: 5rem;
+}
+
+.pd-right-1 {
+    padding-right: 1rem;
+}
+
+.pd-right-2 {
+    padding-right: 2rem;
+}
+
+.pd-right-3 {
+    padding-right: 3rem;
+}
+
+.pd-right-4 {
+    padding-right: 4rem;
+}
+
+.pd-right-5 {
+    padding-right: 5rem;
+}
+
+/*外边距*/
+.unmargin {
+    margin: 0;
+}
+
+.mr-left-1 {
+    margin-left: 1rem;
+}
+
+.mr-left-2 {
+    margin-left: 2rem;
+}
+
+.mr-left-3 {
+    margin-left: 3rem;
+}
+
+.mr-left-4 {
+    margin-left: 4rem;
+}
+
+.mr-left-5 {
+    margin-left: 5rem;
+}
+
+.mr-right-1 {
+    margin-right: 1rem;
+}
+
+.mr-right-2 {
+    margin-right: 2rem;
+}
+
+.mr-right-3 {
+    margin-right: 3rem;
+}
+
+.mr-right-4 {
+    margin-right: 4rem;
+}
+
+.mr-right-5 {
+    margin-right: 5rem;
+}
+
+.radius {
+    border-radius: 10px !important;
+}
+
+/*背景颜色扩展*/
+.bg-red {
+    background-color: #fc2929;
+}
+
+.bg-yellow {
+    background-color: #ffde24;
+}
+
+.bg-orange {
+    background-color: #f17c18;
+}
+
+/*宽度扩展*/
+.width-50 {
+    width: 50%;
+}
+/*重写选项卡tab样式*/
+.nav-tabs {
+    border: 1px solid #d9d9d9;
+    text-align: center;
+}
+    .nav-tabs li{
+        margin:0;
+    }
+    .nav-tabs li:nth-child(n+2) {
+        border-left: 1px solid #d9d9d9;
+    }
+    .nav-tabs li a {
+        color: #999;
+        margin: 0;
+        border: none;
+        padding: 5px 0;
+    }
+
+    .nav-tabs li.active a, .nav-tabs li.active a:focus, .nav-tabs li.active a:hover {
+        background-color: #e9e9e6;
+        border: none;
+        margin: 0;
+        line-height: unset;
+
+    }

@@ -1,0 +1,22 @@
+﻿@model Project3.Web.Models.Archives.IndexViewModel;
+
+@{
+    //归档
+    ViewData["Title"] = "归档";
+    Layout = "~/Views/Shared/apollo/_Layout.cshtml";
+}
+
+<div class="archive">
+    @{
+        foreach (var year in Model.archives.Keys)
+        {
+            <h2 class="archive-year">@year</h2>
+            foreach (var content in Model.archives[year])
+            {
+                <div class="post-item"><div class="post-info">@content.createtime.ToString("MMM d, yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-GB"))</div><a asp-controller="content" asp-action="index" asp-route-cid="@content.cid" class="post-title-link">@content.title</a></div>
+
+            }
+
+        }
+    }
+</div>

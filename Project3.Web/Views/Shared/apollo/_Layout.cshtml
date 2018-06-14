@@ -1,0 +1,48 @@
+﻿@{
+    var pagelist = ViewData["pagelist"] as IList<Project3.Data.Models.Contents>;
+    var options = ViewData["options"] as Project3.Data.Models.OptionsModel;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="X-UA-Compatible" content="IE=edge">
+    <title>@(ViewData["Title"] == null || string.IsNullOrEmpty(ViewData["Title"].ToString()) ? options.title + " " + options.subtitle : ViewData["Title"] + " - " + options.title)</title>
+    <meta name="description" content="@options.description">
+    <meta name="keywords" content="@options.keywords" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="short icon" href="~/theme/apollo/favicon.png">
+    <link rel="stylesheet" href="~/theme/apollo/css/apollo.css">
+    <script src="~/lib/showdown/dist/showdown.min.js"></script>
+
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <a href="/" class="logo-link"><img src="~/theme/apollo/favicon.png"></a>
+            <ul class="nav nav-list">
+                <li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li>
+                <li class="nav-list-item"><a asp-controller="archives" asp-action="index" target="_self" class="nav-list-link">ARCHIVES</a></li>
+                @{
+                    foreach (var p in pagelist)
+                    {
+                        <li class="nav-list-item"><a asp-controller="page" asp-action="index" asp-route-cid="@p.cid" target="_self" class="nav-list-link">@p.title</a></li>
+
+
+                    }
+                }
+            </ul>
+        </header>
+        <section class="container">
+            @RenderBody()
+        </section>
+        <footer>
+            @RenderSection("footer", required: false)
+            <div class="copyright">
+                <p>©2018 <a href="/">@options.title</a>,@options.subtitle. powered by <a href="/" target="_blank" class="powered">Project3</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p>
+            </div>
+        </footer>
+    </div>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

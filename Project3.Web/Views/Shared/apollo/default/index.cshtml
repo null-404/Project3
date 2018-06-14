@@ -1,0 +1,57 @@
+﻿@model Project3.Web.Models.Default.IndexViewModel;
+
+@{
+    //站点主页
+   
+    Layout = "~/Views/Shared/apollo/_Layout.cshtml";
+}
+@{
+    if (Model.meta != null)
+    {
+        var metatype = Model.meta.type == 0 ? "分类" : "标签";
+        <div class="post-content"><h2>查看@(metatype)「<a>@Model.meta.name</a>」下的文章</h2></div>
+
+    }
+    if (!string.IsNullOrEmpty(Model.search))
+    {
+        <div class="post-content"><h2>搜索关于 “<a>@Model.search</a>” 的文章</h2></div>
+
+
+    }
+}
+
+<ul class="home post-list">
+    @{
+        foreach (var data in Model.contentlist)
+        {
+
+            <li class="post-list-item">
+                <article class="post-block">
+                    <h2 class="post-title"><a asp-controller="content" asp-action="index" asp-route-cid="@data.cid" class="post-title-link">@data.title</a></h2>
+                    <div class="post-info">@data.createtime.ToString("MMM d, yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-GB")) </div>
+                    <div class="post-content"><p>@data.excerpt</p></div>
+                    <a asp-controller="content" asp-action="index" asp-route-cid="@data.cid" class="read-more">...more</a>
+                </article>
+            </li>
+        }
+    }
+
+</ul>
+
+@section footer{
+
+    @{
+        var prevDisabled = !Model.contentlist.HasPreviousPage ? "hidden" : "";
+        var nextDisabled = !Model.contentlist.HasNextPage ? "hidden" : "";
+    }
+    <div class="paginator">
+        <a asp-route-search="@Model.search"
+           asp-route-mid="@Model.mid"
+           asp-route-pageindex="@(Model.contentlist.PageIndex - 1)"
+           class="prev @prevDisabled">PREV</a>
+        <a asp-route-search="@Model.search"
+           asp-route-mid="@Model.mid"
+           asp-route-pageindex="@(Model.contentlist.PageIndex + 1)"
+           class="next @nextDisabled">NEXT</a>
+    </div>
+}
