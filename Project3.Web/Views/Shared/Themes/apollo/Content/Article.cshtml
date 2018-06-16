@@ -49,6 +49,9 @@
 @await Html.PartialAsync("Themes/apollo/_PartialViews/Comments")
 
 @section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/Comments.js" asp-append-version="true"></script>
+
     <script>
         //markdown处理
         var converter = new showdown.Converter({ tables: "true", tasklists: "true", emoji: "true" });
@@ -56,8 +59,8 @@
         var html = converter.makeHtml(content.innerHTML);
         content.innerHTML = html;
 
-
+        comments(@Model.content.cid, "comments", "toreply", "form","loadmore");
     </script>
-    <script src="~/js/Comments.js" asp-append-version="true"></script>
+
 
 }

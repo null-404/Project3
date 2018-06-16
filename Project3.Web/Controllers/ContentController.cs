@@ -13,6 +13,9 @@ using Project3.Web.Models.ContentVM;
 
 namespace Project3.Web.Controllers
 {
+    /// <summary>
+    /// 内容显示（文章/页面）
+    /// </summary>
     public class ContentController : BaseController
     {
 
@@ -63,7 +66,8 @@ namespace Project3.Web.Controllers
         }
         #endregion
 
-        
+
+        #region 评论提交
         [HttpPost]
         public async Task<IActionResult> Comment_Post(int cid, int type, int parentcoid, string nickname, string email, string content)
         {
@@ -110,7 +114,7 @@ namespace Project3.Web.Controllers
 
             return RedirectToAction(type == 0 ? nameof(Article) : nameof(Page), new { cid });
         }
-
+        #endregion
 
     }
 

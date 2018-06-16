@@ -17,10 +17,19 @@ namespace Project3.Data.Service.Interface
         /// </summary>
         /// <param name="cid"></param>
         /// <returns></returns>
-        Task<IList<Comments>> GetListAsync(int cid,int parentcoid=0);
+        Task<IList<Comments>> GetListAsync(int cid, int parentcoid = 0);
 
         Task<Comments> GetAsync(int coid);
 
         Task AddAsync(Comments comment);
+
+        /// <summary>
+        /// AJAX获取评论
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pagesize"></param>
+        /// <param name="parentcoid"></param>
+        /// <returns></returns>
+        Task<PaginatedList<Comments>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid,int skip);
     }
 }

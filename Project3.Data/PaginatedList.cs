@@ -51,7 +51,7 @@ namespace Project3.Data
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             TotalContents = count;
-           
+
             this.AddRange(items);
         }
 
@@ -62,10 +62,10 @@ namespace Project3.Data
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+        public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize, int skip = 0)
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await source.Skip(((pageIndex - 1) * pageSize) + skip).Take(pageSize).ToListAsync();
 
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }

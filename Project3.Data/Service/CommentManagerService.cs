@@ -76,5 +76,22 @@ namespace Project3.Data.Service
 
             }
         }
+
+        public async Task<PaginatedList<Comments>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid, int skip)
+        {
+            var content = _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
+            if (content != null)
+            {
+
+                var data = from s in _project3DB.Comments.Where(m => m.cid == cid && m.parentcoid == parentcoid) select s;
+
+
+
+
+                return await PaginatedList<Comments>.CreateAsync(data.AsNoTracking(), page ?? 1, pagesize, skip);
+            }
+
+            return null;
+        }
     }
 }
