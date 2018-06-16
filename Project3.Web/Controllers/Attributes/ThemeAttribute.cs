@@ -41,23 +41,11 @@ namespace Project3.Web.Controllers.Attributes
                 var controller = context.Controller as BaseController;
                 var options = optionsCache.Get().Result;
 
-                if (controller.IsError)
-                {
-                    var error_result = new ViewResult();
-                    error_result.ViewName = options.theme + "/Error";
-                    error_result.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
-                    error_result.ViewData.Add("error", controller.Error);
-
-                    context.Result = error_result;
-                    return;
-                }
+                
 
                 var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-
-
-
                 var result = new ViewResult();
-                result.ViewName = options.theme + "/" + controllerActionDescriptor.ControllerName + "/" + controllerActionDescriptor.ActionName;
+                result.ViewName = "Themes/" + options.theme + "/" + controllerActionDescriptor.ControllerName + "/" + controllerActionDescriptor.ActionName;
                 result.ViewData = controller.ViewData;
 
 

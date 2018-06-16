@@ -5,23 +5,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project3.Data.Service.Interface;
 using Project3.Web.Controllers.Attributes;
-using Project3.Web.Models.Page;
+using Project3.Web.Models.MetasVM;
+
 namespace Project3.Web.Controllers
 {
-    public class PageController : BaseController
+    public class MetasController : BaseController
     {
-        private readonly IPageCache pageCache;
-        public PageController(IPageCache pageCache)
+        private readonly IMetasManagerService mms;
+        public MetasController(IMetasManagerService mms)
         {
-            this.pageCache = pageCache;
-
+            this.mms = mms;
         }
 
         [Theme]
-        public async Task<IActionResult> Index(int cid)
+        public async Task<IActionResult> Index()
         {
             var VM = new IndexViewModel();
-            VM.content = await pageCache.GetByCid(cid);
+            VM.metas = await mms.GetMetasAsync(-1);
             ViewData.Model = VM;
             return View();
         }

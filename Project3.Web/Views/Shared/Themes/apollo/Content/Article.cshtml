@@ -1,10 +1,10 @@
-﻿@model Project3.Web.Models.Content.IndexViewModel;
+﻿@model Project3.Web.Models.ContentVM.ArticleViewModel;
 @{
     //内容页
 
     ViewData["Title"] = "apollo";
 
-    Layout = "~/Views/Shared/apollo/_Layout.cshtml";
+    Layout = "~/Views/Shared/Themes/apollo/_Layout.cshtml";
 }
 
 <div class="post">
@@ -28,7 +28,7 @@
             <a id="more"></a>
             <!--正文-->
             <div id="content">@Model.content.content</div>
-            
+
         </div>
 
         <!--标签-->
@@ -43,13 +43,21 @@
 
         </div>
     </article>
-</div>
 
-@section scripts{ 
+</div>
+<!--评论-->
+@await Html.PartialAsync("Themes/apollo/_PartialViews/Comments")
+
+@section Scripts{
     <script>
-        var converter = new showdown.Converter({ tables: "true", tasklists: "true", emoji:"true"});
+        //markdown处理
+        var converter = new showdown.Converter({ tables: "true", tasklists: "true", emoji: "true" });
         var content = document.getElementById("content");
         var html = converter.makeHtml(content.innerHTML);
         content.innerHTML = html;
+
+
     </script>
+    <script src="~/js/Comments.js" asp-append-version="true"></script>
+
 }

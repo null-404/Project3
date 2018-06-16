@@ -59,6 +59,9 @@ namespace Project3.Data.Models
         /// </summary>
         public string content { get; set; }
 
-
+        /// <summary>
+        /// 回复对象
+        /// </summary>
+        public string reply { get; set; }
     }
 }

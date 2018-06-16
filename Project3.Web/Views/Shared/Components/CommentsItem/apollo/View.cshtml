@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Project3.Data.Models.Comments>;
+
+@{
+    if (Model.Count() > 0)
+    {
+        <ul class="commentitems" id="commentitems">
+            @{
+                foreach (var comment in Model)
+                {
+
+                    <li>
+                        <div class="commenthead"><img src="~/theme/apollo/favicon.png" /></div>
+                        <div class="commentcontent">
+                            <div class="commentheader">
+                                <label class="nickname">@comment.nickname</label>
+                                @{ 
+                                    if (!string.IsNullOrEmpty(comment.reply)){
+                                        <label>回复</label> <label class="nickname">@@@(comment.reply)</label>
+                                     }
+                                }
+                                @comment.createtime.ToString("MMM d, yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-GB"))
+                            </div>
+                            <div class="commentreply">
+                                @comment.content
+                            </div>
+                            <div class="commentaction">
+                                <a href="#form" data-reply="@comment.nickname" data-parentcoid="@comment.coid" id="reply">回复</a>
+                            </div>
+                        </div>
+                        @await Component.InvokeAsync("CommentsItem", new { cid = comment.cid, parentcoid = comment.coid })
+
+                    </li>
+                }
+            }
+
+        </ul>
+
+    }
+}
+

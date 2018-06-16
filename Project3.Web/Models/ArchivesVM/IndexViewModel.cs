@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project3.Web.Models.Archives
+namespace Project3.Web.Models.ArchivesVM
 {
     public class IndexViewModel : BaseViewModel
     {

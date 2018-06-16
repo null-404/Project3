@@ -1,13 +1,13 @@
-﻿using Project3.Data.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project3.Web.Models.Page
+namespace Project3.Web.Models.MetasVM
 {
     public class IndexViewModel
     {
-        public Contents content { get; set; }
+        public IList<Project3.Data.Models.Metas> metas { get; set; }
+
     }
 }

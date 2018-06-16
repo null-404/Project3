@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project3.Web.Models.Default
+namespace Project3.Web.Models.DefaultVM
 {
     public class IndexViewModel : BaseViewModel
     {

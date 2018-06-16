@@ -1,9 +1,9 @@
-﻿@model Project3.Web.Models.Default.IndexViewModel;
+﻿@model Project3.Web.Models.DefaultVM.IndexViewModel;
 
 @{
     //站点主页
    
-    Layout = "~/Views/Shared/apollo/_Layout.cshtml";
+    Layout = "~/Views/Shared/Themes/apollo/_Layout.cshtml";
 }
 @{
     if (Model.meta != null)
@@ -27,10 +27,10 @@
 
             <li class="post-list-item">
                 <article class="post-block">
-                    <h2 class="post-title"><a asp-controller="content" asp-action="index" asp-route-cid="@data.cid" class="post-title-link">@data.title</a></h2>
+                    <h2 class="post-title"><a asp-controller="content" asp-action="article" asp-route-cid="@data.cid" class="post-title-link">@data.title</a></h2>
                     <div class="post-info">@data.createtime.ToString("MMM d, yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-GB")) </div>
                     <div class="post-content"><p>@data.excerpt</p></div>
-                    <a asp-controller="content" asp-action="index" asp-route-cid="@data.cid" class="read-more">...more</a>
+                    <a asp-controller="content" asp-action="article" asp-route-cid="@data.cid" class="read-more">...more</a>
                 </article>
             </li>
         }

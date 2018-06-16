@@ -1,0 +1,32 @@
+﻿@model Project3.Web.Models.MetasVM.IndexViewModel;
+@{
+    //分类与标签
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Themes/apollo/_Layout.cshtml";
+}
+
+<h2>分类</h2>
+<ul>
+    @{
+        foreach (var category in Model.metas.Where(m => m.type == 0))
+        {
+            <li>
+                <a asp-controller="default" asp-action="index" asp-route-mid="@category.mid" style="color:#22bd77;"> @category.name</a> (@category.count)
+            </li>
+
+        }
+    }
+</ul>
+
+<h2>标签</h2>
+<ul>
+    @{
+        foreach (var tag in Model.metas.Where(m => m.type == 1))
+        {
+            <li>
+                <a asp-controller="default" asp-action="index" asp-route-mid="@tag.mid" style="color:#22bd77;"> @tag.name</a> (@tag.count)
+            </li>
+
+        }
+    }
+</ul>

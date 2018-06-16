@@ -143,6 +143,11 @@ namespace Project3.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Default}/{action=Index}/{id?}");
+                //routes.MapRoute(
+                // name: "test",
+                // template: "test/{id}",
+                // defaults: new { controller = "content", action = "test" });
+
             });
 
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project3.Data.Service.Interface;
 using Project3.Web.Controllers.Attributes;
-using Project3.Web.Models.Default;
+using Project3.Web.Models.DefaultVM;
 
 namespace Project3.Web.Controllers
 {

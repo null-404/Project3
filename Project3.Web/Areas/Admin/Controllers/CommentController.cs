@@ -29,7 +29,7 @@ namespace Project3.Web.Areas.Admin.Controllers
         {
 
             var VM = new CommentListViewModel(ce);
-            VM.comments = await cms.GetListAsync(pageindex, 10);
+            VM.comments = await cms.GetPageListAsync(pageindex, 10);
             VM.pageindex = pageindex;
 
             return View(VM);
