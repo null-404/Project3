@@ -5,6 +5,7 @@ using Project3.Data.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -77,21 +78,38 @@ namespace Project3.Data.Service
             }
         }
 
-        public async Task<PaginatedList<Comments>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid, int skip)
+        public async Task<PaginatedList<CommentJsonModel>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid, int skip)
         {
             var content = _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
             if (content != null)
             {
 
-                var data = from s in _project3DB.Comments.Where(m => m.cid == cid && m.parentcoid == parentcoid) select s;
+                var data = _project3DB.Comments.Where(m => m.cid == cid && m.parentcoid == parentcoid).OrderByDescending(m => m.createtime).
+                    Select(m => new CommentJsonModel
+                    {
+                        cid = m.cid,
+                        coid = m.coid,
+                        reply = m.reply,
+                        content = m.content,
+                        createtime = m.createtime,
+                        nickname = m.nickname,
+                        headmd5 = Md5(m.mail)
+                    });
 
 
 
 
-                return await PaginatedList<Comments>.CreateAsync(data.AsNoTracking(), page ?? 1, pagesize, skip);
+                return await PaginatedList<CommentJsonModel>.CreateAsync(data.AsNoTracking(), page ?? 1, pagesize, skip);
             }
 
             return null;
+        }
+        public string Md5(string str)
+        {
+            byte[] result = Encoding.Default.GetBytes(str);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] output = md5.ComputeHash(result);
+            return BitConverter.ToString(output).Replace("-", "").ToLower();
         }
     }
 }

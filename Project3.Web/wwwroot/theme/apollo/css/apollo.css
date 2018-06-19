@@ -784,11 +784,10 @@ footer {
 .commentitems {
     padding: 0;
     top: auto;
-    margin:0;
-   
+    margin: 0;
 }
 
-  
+
 
     .commentitems:nth-child(3) {
         margin-left: 2em;
@@ -801,18 +800,23 @@ footer {
         background-color: rgba(0, 0, 0, .03);
         padding: 0.5em;
     }
-    .commentitems:nth-child(2n+1) li {
-      margin:0;
-        border-bottom: 1px dashed rgba(0, 0, 0, .06);
-      
-        padding: 0.5em 0.1rem;
-    }
+
+        .commentitems:nth-child(2n+1) li {
+            margin: 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, .06);
+            padding: 0.5em 0.1rem;
+        }
+
+            .commentitems:nth-child(2n+1) li:last-child {
+                border: none;
+            }
+
     .commentitems li {
         list-style-type: none;
         height: auto;
         /*margin-bottom: 3em;*/
         position: relative;
-        margin-bottom:1em;
+        margin-bottom: 1em;
     }
 
 .commenthead {

@@ -25,6 +25,26 @@ namespace Project3.Data
         public int TotalContents { get; set; }
 
         /// <summary>
+        /// 每页条数
+        /// </summary>
+        public int PageSize { get; set; }
+
+        /// <summary>
+        /// 剩余条目总数
+        /// </summary>
+        public int HasCount
+        {
+            get
+            {
+                if (PageIndex == TotalPages)
+                {
+                    return 0;
+                }
+                return TotalContents - (PageIndex * PageSize);
+            }
+        }
+
+        /// <summary>
         /// 是否还有上页
         /// </summary>
         public bool HasPreviousPage
@@ -51,7 +71,7 @@ namespace Project3.Data
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             TotalContents = count;
-
+            PageSize = pageSize;
             this.AddRange(items);
         }
 
@@ -67,7 +87,7 @@ namespace Project3.Data
             var count = await source.CountAsync();
             var items = await source.Skip(((pageIndex - 1) * pageSize) + skip).Take(pageSize).ToListAsync();
 
-            return new PaginatedList<T>(items, count, pageIndex, pageSize);
+            return new PaginatedList<T>(items, count - skip, pageIndex, pageSize);
         }
 
     }

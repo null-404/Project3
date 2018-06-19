@@ -8,7 +8,7 @@ namespace Project3.Web.Models
 {
     public class CommentsModel
     {
-        public IList<Comments> comments { get; set; }
+        public IList<CommentJsonModel> comments { get; set; }
 
         /// <summary>
         /// 当前页
@@ -25,6 +25,10 @@ namespace Project3.Web.Models
         /// </summary>
         public int totalcontents { get; set; }
 
+        /// <summary>
+        /// 剩余条目
+        /// </summary>
+        public int hascount { get; set; }
         /// <summary>
         /// 是否还有上页
         /// </summary>

@@ -49,9 +49,11 @@
                 success: function (data) {
                     if (data.hasnextpage) {
                         $("#" + loadmoreid).removeClass("hidden");
+                        $("#" + loadmoreid + " a").html("更多" + data.hascount + "条回复");
                     }
                     else {
                         $("#" + loadmoreid).addClass("hidden");
+                        
 
                     }
 
@@ -64,8 +66,8 @@
                         var childhtml = '<ul class="commentitems"></ul>';
 
 
-                        var html = '<li data-coid="' + c.coid + '"><div class="commenthead"><img src="/theme/apollo/favicon.png" /></div><div class="commentcontent"><div class="commentheader"><label class="nickname">' + c.nickname + '</label></div><div class="commentreply">' + c.content + '</div><div class="commentaction"><a href="#form" data-reply="' + c.nickname + '" data-parentcoid="' + c.coid + '" data-action="reply">回复</a></div></div>' + childhtml + '</li>';
-                        $("#" + commentsid).append(html);
+
+                        $("#" + commentsid).append(getCommentsHtml(c, childhtml));
                         //加载默认子级评论
                         LoadDefaultChildComments(c.coid);
 
@@ -81,6 +83,7 @@
         LoadChildComments(coid, 2, 1);
     }
 
+    //加载子级评论
     function LoadChildComments(coid, pagesize, page, skip) {
 
         $.ajax({
@@ -89,36 +92,42 @@
             url: "/commentsapi/get?cid=" + cid + "&parentcoid=" + coid + "&page=" + page + "&pagesize=" + pagesize + "&skip=" + skip,
 
             success: function (data) {
-                console.log(data);
                 var childmore = '';
-                $("li[data-coid=" + coid + "] ul #childmore").remove();
+
+                //$("li[data-coid=" + coid + "] ul #childmore").remove();
+
 
                 if (data.hasnextpage) {
                     if (pagesize == 2) {
                         page = 0;
                     }
-                    childmore = '<li id="childmore"><label><a data-page="' + page + '" data-coid="' + coid + '" data-action="loadchildcomments">更多</a></label></li>';
+                    childmore = '<li id="childmore"><label><a href="javascript:void;" data-page="' + page + '" data-coid="' + coid + '" data-action="loadchildcomments">更多' + data.hascount + '条回复</a></label></li>';
+
+                }
+                if (data.totalcontents == 0) {
+                    $("li[data-coid=" + coid + "] ul").remove();
                 }
                 $.each(data.comments, function (i, c) {
-
-
-                    var html = '<li data-coid="' + c.coid + '"><div class="commenthead"><img src="/theme/apollo/favicon.png" /></div><div class="commentcontent"><div class="commentheader"><label class="nickname">' + c.nickname + '</label></div><div class="commentreply">' + c.content + '</div><div class="commentaction"><a href="#form" data-reply="' + c.nickname + '" data-parentcoid="' + c.coid + '" data-action="reply">回复</a></div></div></li>';
-                    $("li[data-coid=" + coid + "] ul").append(html);
+                    //填充子级评论数据
+                    $("li[data-coid=" + coid + "] ul").append(getCommentsHtml(c));
 
                 });
+                //填充加载更多按钮
                 $("li[data-coid=" + coid + "] ul").append(childmore);
+                //重置监听
                 onListenClickChildLoad();
+                console.log("-->" + childmore);
             }
         });
-        //return html;
 
     }
     //重置监听子级评论加载点击
     function onListenClickChildLoad() {
         $("#childmore a").unbind("click").click(function () {
-
-            LoadChildComments($(this).data("coid"), 10, ($(this).data("page") + 1), 2);
-            //  console.log(i + "加载子级评论：" + $(this).data("coid"));
+            $(this).parent().parent().remove();
+            var page = ($(this).data("page") + 1);
+            //每次加载10条评论，跳过前面2条（因为默认加载了2条
+            LoadChildComments($(this).data("coid"), 10, page, 2);
 
         });
     }
@@ -129,48 +138,19 @@
     });
 
 
+    function getCommentsHtml(data, child) {
+        if (typeof child == "undefined") {
+            child = "";
+        }
+        var reply = "";
+        if (data.reply != null) {
+            reply = " <label>回复</label> <label class=\"nickname\">@" + data.reply + "</label>";
+        }
+        var html = '<li data-coid="' + data.coid + '"><div class="commenthead"><img src="https://www.gravatar.com/avatar/' + data.headmd5 +'?s=256&d=monsterid" /></div><div class="commentcontent"><div class="commentheader"><label class="nickname">' + data.nickname + '</label>' + reply + " " + data.createtime + '</div><div class="commentreply">' + data.content + '</div><div class="commentaction"><a href="#form" data-reply="' + data.nickname + '" data-parentcoid="' + data.coid + '" data-action="reply">回复</a></div></div>' + child + '</li>';
+        return html;
+    }
 
 
-    //滚动条到底部时加载数据
-    //$(window).bind("scroll", function () {
-    //    if ($(document).scrollTop() + $(window).height() > $(document).height() - 100)// 接近底部100px
-    //    {
-    //        console.log(pageindex + "/" + totalpages);
-    //        LoadParentComments();
-
-
-    //    }
-    //});
 
 
 };
-
-//window.onload = function () {
-
-
-//    //回复评论处理
-//    var reply = document.getElementById("commentitems");
-//    reply.onclick = function (ev) {
-//        var ev = ev || window.event;
-//        var target = ev.target || ev.srcElement;
-
-//        if (target.nodeName.toLowerCase() == 'a' && target.id == "reply") {
-//            var parentcoid = document.getElementById("parentcoid");
-//            parentcoid.value = target.getAttribute('data-parentcoid');
-//            document.getElementById("toreply").innerHTML = "<a data-action=\"cancle\" href=\"#form\">[取消]</a> 正在回复 <a class=\"nickname\">" + target.getAttribute('data-reply')+"</a>";
-//        }
-
-//    }
-
-//    var cancle = document.getElementById("form");
-//    cancle.onclick = function (ev) {
-//        var ev = ev || window.event;
-//        var target = ev.target || ev.srcElement;
-
-//        if (target.nodeName.toLowerCase() == 'a' && target.getAttribute('data-action')=="cancle") {
-//            var parentcoid = document.getElementById("parentcoid");
-//            parentcoid.value = "0";
-//            document.getElementById("toreply").innerHTML = "评论";
-//        }
-//    }
-//}

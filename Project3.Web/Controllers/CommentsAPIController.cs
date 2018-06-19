@@ -25,7 +25,7 @@ namespace Project3.Web.Controllers
             rd.totalcontents = data.TotalContents;
             rd.totalpages = data.TotalPages;
             rd.pageindex = data.PageIndex;
-
+            rd.hascount = data.HasCount;
             return Json(rd);
         }
     }

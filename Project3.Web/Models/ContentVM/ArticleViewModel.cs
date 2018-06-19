@@ -18,6 +18,6 @@ namespace Project3.Web.Models.ContentVM
         /// </summary>
         public IList<Metas> metas { get; set; }
 
-        public IList<Comments> comments { get; set; }
+        //public IList<Comments> comments { get; set; }
     }
 }

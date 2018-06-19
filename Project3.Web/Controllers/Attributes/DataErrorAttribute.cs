@@ -34,14 +34,14 @@ namespace Project3.Web.Controllers.Attributes
 
             public void OnActionExecuted(ActionExecutedContext context)
             {
-
                 var controller = context.Controller as BaseController;
                 var options = optionsCache.Get().Result;
 
                 if (controller.IsError)
                 {
+
                     var error_result = new ViewResult();
-                    error_result.ViewName = "Themes/"+options.theme + "/Error";
+                    error_result.ViewName = "Themes/" + options.theme + "/Error";
                     error_result.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
                     error_result.ViewData.Add("ErrorTitle", controller.ErrorTitle);
                     error_result.ViewData.Add("ErrorContent", controller.ErrorContent);
@@ -49,11 +49,12 @@ namespace Project3.Web.Controllers.Attributes
                     context.Result = error_result;
                     return;
                 }
-            }
 
+            }
+            //改成抛出异常，然后由异常拦截返回错误页面，否则还要在action另外写判断。（2018/6/19-待完成
             public void OnActionExecuting(ActionExecutingContext context)
             {
-
+                
             }
         }
     }
