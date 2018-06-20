@@ -41,11 +41,12 @@ namespace Project3.Web.Controllers.Attributes
                 var controller = context.Controller as BaseController;
                 var options = optionsCache.Get().Result;
 
-                
+
 
                 var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
                 var result = new ViewResult();
                 result.ViewName = "Themes/" + options.theme + "/" + controllerActionDescriptor.ControllerName + "/" + controllerActionDescriptor.ActionName;
+
                 result.ViewData = controller.ViewData;
 
 

@@ -30,10 +30,10 @@
                     <tr>
                         <td><input type="checkbox" name="coid" value="@comment.coid" /></td>
 
-                        <td>@comment.nickname</td>
+                        <td>@Html.Raw(comment.nickname)</td>
                         <td>@comment.mail</td>
                         <td>@comment.ip</td>
-                        <td>@comment.content</td>
+                        <td>@Html.Raw(comment.content)</td>
                         <td>@comment.createtime</td>
                         <td>
 

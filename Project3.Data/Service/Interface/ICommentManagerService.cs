@@ -31,5 +31,7 @@ namespace Project3.Data.Service.Interface
         /// <param name="parentcoid"></param>
         /// <returns></returns>
         Task<PaginatedList<CommentJsonModel>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid,int skip);
+
+        Task<int> CountAsync();
     }
 }

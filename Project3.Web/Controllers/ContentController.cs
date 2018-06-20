@@ -48,6 +48,10 @@ namespace Project3.Web.Controllers
                 //获取评论
                 //VM.comments = await coms.GetListAsync(cid);
                 ViewData.Model = VM;
+                //阅读计数
+                //VM.content.readnum++;
+                //await cms.UpdateAsync(VM.content);
+                await cms.UpdateReadnumAsync(cid, 1);
             }
 
             return View();
@@ -68,6 +72,7 @@ namespace Project3.Web.Controllers
             else
             {
                 ViewData.Model = VM;
+               
             }
             return View();
         }
@@ -76,6 +81,7 @@ namespace Project3.Web.Controllers
 
         #region 评论提交
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment_Post(int cid, int type, int parentcoid, string nickname, string email, string content)
         {
             var options = await optionsCache.Get();

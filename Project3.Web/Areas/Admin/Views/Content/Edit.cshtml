@@ -12,7 +12,7 @@
 
     }
     var isPageHidden = Model.Type == 1 ? "hidden" : "";
-    var isArticleHidden= Model.Type == 0 ? "hidden" : "";
+    var isArticleHidden = Model.Type == 0 ? "hidden" : "";
 }
 <script>
     var cid =@Model.content.cid;
@@ -78,11 +78,11 @@
         <div class="col-md-8">
             <div class="form-group">
 
-                <input type="text" class="form-control" placeholder="标题" value="@Model.content.title" name="title">
+                <input type="text" class="form-control" placeholder="标题" value="@Html.Raw(Model.content.title)" name="title">
             </div>
             <div class="form-group @isPageHidden">
                 <label for="name">摘要</label>
-                <textarea class="form-control" rows="2" placeholder="" name="excerpt">@Model.content.excerpt</textarea>
+                <textarea class="form-control" rows="2" placeholder="" name="excerpt">@Html.Raw(Model.content.excerpt)</textarea>
             </div>
             <div class="form-group">
 
@@ -94,7 +94,7 @@
                     <button id="ui_btns_ordered_list" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list"></span></button>
 
                 </div>
-                <textarea id="md" class="form-control" rows="12" placeholder="" style="margin-top:10px;" name="content">@Model.content.content</textarea>
+                <textarea id="md" class="form-control" rows="12" placeholder="" style="margin-top:10px;" name="content">@Html.Raw(Model.content.content)</textarea>
             </div>
             <div class="form-group pull-right">
                 <div class="col-sm-offset-2 col-sm-10">
@@ -139,23 +139,23 @@
                         <select id="category" class="form-control" name="category" multiple="multiple">
 
                             @{
-                foreach (var category in Model.metas.Where(m => m.type == 0))
-                {
+                                foreach (var category in Model.metas.Where(m => m.type == 0))
+                                {
 
-                    if (Model.selectedmetas.Contains(category))
-                    {
+                                    if (Model.selectedmetas.Contains(category))
+                                    {
 
-                        <option value="@category.name" selected="selected">@category.name</option>
+                                        <option value="@category.name" selected="selected">@category.name</option>
 
-    }
-    else
-    {
-                <option value="@category.name">@category.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@category.name">@category.name</option>
 
 
-}
+                                    }
 
-}
+                                }
                             }
                         </select>
                         <p class="help-block">输入回车可创建</p>
@@ -164,22 +164,22 @@
                         <label for="name">标签</label>
                         <select id="tag" class="form-control" name="tags" multiple="multiple">
                             @{
-                foreach (var tag in Model.metas.Where(m => m.type == 1))
-                {
-                    if (Model.selectedmetas.Contains(tag))
-                    {
+                                foreach (var tag in Model.metas.Where(m => m.type == 1))
+                                {
+                                    if (Model.selectedmetas.Contains(tag))
+                                    {
 
-                        <option value="@tag.name" selected="selected">@tag.name</option>
+                                        <option value="@tag.name" selected="selected">@tag.name</option>
 
-    }
-    else
-    {
-                <option value="@tag.name">@tag.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@tag.name">@tag.name</option>
 
 
-}
+                                    }
 
-}
+                                }
                             }
                         </select>
                         <p class="help-block">输入回车可创建</p>

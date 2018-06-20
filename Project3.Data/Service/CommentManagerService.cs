@@ -21,7 +21,7 @@ namespace Project3.Data.Service
         }
         public async Task<PaginatedList<Comments>> GetPageListAsync(int? pageindex, int pagesize)
         {
-            var data = from s in _project3DB.Comments select s;
+            var data = from s in _project3DB.Comments orderby s.coid descending select s;
 
 
             return await PaginatedList<Comments>.CreateAsync(data.AsNoTracking(), pageindex ?? 1, pagesize);
@@ -35,8 +35,11 @@ namespace Project3.Data.Service
                 {
                     //评论计数变更
                     var content = await _project3DB.Contents.Where(m => m.cid == comment.cid).SingleOrDefaultAsync();
-                    content.commentsnum--;
-                    await _project3DB.UpdateAsync(content);
+                    if (content != null)
+                    {
+                        content.commentsnum--;
+                        await _project3DB.UpdateAsync(content);
+                    }
                     //删除评论
                     _project3DB.Comments.Remove(comment);
 
@@ -68,6 +71,10 @@ namespace Project3.Data.Service
             var content = await _project3DB.Contents.Where(m => m.cid == comment.cid && m.status == 0).SingleOrDefaultAsync();
             if (content != null)
             {
+                //评论html代码转义
+                comment.content = System.Web.HttpUtility.HtmlEncode(comment.content);
+
+                comment.nickname = System.Web.HttpUtility.HtmlEncode(comment.nickname);
                 //添加评论
                 await _project3DB.AddAsync(comment);
 
@@ -80,21 +87,22 @@ namespace Project3.Data.Service
 
         public async Task<PaginatedList<CommentJsonModel>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid, int skip)
         {
-            var content = _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
-            if (content != null)
+            var content = await _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
+            if (content != null && content.allowcomment == 0)
             {
 
-                var data = _project3DB.Comments.Where(m => m.cid == cid && m.parentcoid == parentcoid).OrderByDescending(m => m.createtime).
+                var data = _project3DB.Comments.Where(m => m.cid == cid && m.parentcoid == parentcoid).
                     Select(m => new CommentJsonModel
                     {
                         cid = m.cid,
                         coid = m.coid,
-                        reply = m.reply,
-                        content = m.content,
                         createtime = m.createtime,
                         nickname = m.nickname,
-                        headmd5 = Md5(m.mail)
-                    });
+                        reply = m.reply,
+                        content = m.content,
+                        headmd5= MD5Encrypt(m.mail)
+                    }).
+                    OrderByDescending(m => m.createtime);
 
 
 
@@ -104,12 +112,17 @@ namespace Project3.Data.Service
 
             return null;
         }
-        public string Md5(string str)
+        private string MD5Encrypt(string str)
         {
-            byte[] result = Encoding.Default.GetBytes(str);
+            byte[] result = Encoding.Default.GetBytes(str);    //tbPass为输入密码的文本框
             MD5 md5 = new MD5CryptoServiceProvider();
             byte[] output = md5.ComputeHash(result);
             return BitConverter.ToString(output).Replace("-", "").ToLower();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _project3DB.Comments.CountAsync();
         }
     }
 }

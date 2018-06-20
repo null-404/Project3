@@ -58,9 +58,10 @@ namespace Project3.Web.Areas.Admin.Controllers
         #region 操作-删除内容
         [Alert]
         [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete_Post(int type, params int[] cid)
         {
-
+           
             int x = await cms.DeleteByCidAsync(cid);
             if (x > 0)
             {

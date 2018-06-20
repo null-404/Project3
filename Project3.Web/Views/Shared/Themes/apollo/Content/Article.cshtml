@@ -6,6 +6,15 @@
 
     Layout = "~/Views/Shared/Themes/apollo/_Layout.cshtml";
 }
+@{
+    if (!string.IsNullOrEmpty(Model.content.banner))
+    {
+
+        <div class="banner">
+            <img src="@Model.content.banner" />
+        </div>
+    }
+}
 
 <div class="post">
     <article class="post-block">
@@ -27,7 +36,7 @@
             <p>@Model.content.excerpt</p>
             <a id="more"></a>
             <!--正文-->
-            <div id="content">@Model.content.content</div>
+            <div id="content">@Html.Raw(Model.content.content)</div>
 
         </div>
 

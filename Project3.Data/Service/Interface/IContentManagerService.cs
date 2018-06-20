@@ -29,5 +29,14 @@ namespace Project3.Data.Service.Interface
 
         Task<Contents> GetPageByCidAsync(int cid);
         Task<IList<Contents>> GetPageListAsync();
+
+        Task<int> CountAsync(int type);
+
+        /// <summary>
+        /// 更新阅读数
+        /// </summary>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        Task UpdateReadnumAsync(int cid, int add);
     }
 }

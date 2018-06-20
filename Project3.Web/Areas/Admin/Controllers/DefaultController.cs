@@ -12,6 +12,7 @@ using Project3.Data.Models;
 using Project3.Data.Service.Interface;
 using Project3.Extensions;
 using Project3.Web.Areas.Admin.Filters;
+using Project3.Web.Areas.Admin.Models;
 
 namespace Project3.Web.Areas.Admin.Controllers
 {
@@ -21,15 +22,24 @@ namespace Project3.Web.Areas.Admin.Controllers
         private readonly IUsersManagerService ums;
         private readonly IOptionsCache optionsCache;
         private readonly IPageCache pageCache;
-        public DefaultController(IUsersManagerService ums, IPageCache pageCache, IOptionsCache optionsCache)
+        private readonly IContentManagerService cms;
+        private readonly ICommentManagerService coms;
+        public DefaultController(IUsersManagerService ums, IPageCache pageCache, IOptionsCache optionsCache, IContentManagerService cms, ICommentManagerService coms)
         {
             this.ums = ums;
             this.pageCache = pageCache;
             this.optionsCache = optionsCache;
+            this.cms = cms;
+            this.coms = coms;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var VM = new DefaultIndexViewModel();
+            VM.TotalArticles = await cms.CountAsync(0);
+            VM.TotalPages = await cms.CountAsync(1);
+            VM.TotalComments = await coms.CountAsync();
+            VM.Comments = await coms.GetPageListAsync(1, 5);
+            return View(VM);
         }
 
         [AllowAnonymous]

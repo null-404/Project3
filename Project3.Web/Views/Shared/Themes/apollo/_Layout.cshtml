@@ -19,11 +19,11 @@
 <body>
     <div class="wrap">
         <header>
-            <a href="/" class="logo-link"><img src="~/theme/apollo/favicon.png"></a>
+            <a href="/" class="logo-link"><img src="@options.logo" /></a>
             <ul class="nav nav-list">
                 <li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li>
                 <li class="nav-list-item"><a asp-controller="archives" asp-action="index" target="_self" class="nav-list-link">ARCHIVES</a></li>
-                <li class="nav-list-item"><a asp-controller="metas" asp-action="index" target="_self" class="nav-list-link">CATEGORY/TAGS</a></li>
+                <li class="nav-list-item"><a asp-controller="metas" asp-action="index" target="_self" class="nav-list-link">CATEGORY&TAGS</a></li>
 
                 @{
                     foreach (var p in pagelist)

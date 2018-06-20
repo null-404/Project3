@@ -19,10 +19,22 @@ namespace Project3.Data.Service
         {
             this._project3DB = _project3DB;
         }
+        #region xss过滤器
+        private Contents XssFilter(Contents contents)
+        {
+            contents.title = System.Web.HttpUtility.HtmlEncode(contents.title);
+            contents.excerpt = System.Web.HttpUtility.HtmlEncode(contents.excerpt);
+            contents.content = System.Web.HttpUtility.HtmlEncode(contents.content);
+
+            return contents;
+        }
+        #endregion
 
         #region 新增内容
         public Task<Contents> AddAsync(Contents _contents)
         {
+            _contents = XssFilter(_contents);
+
             return _project3DB.AddAsync(_contents);
         }
         #endregion
@@ -31,7 +43,7 @@ namespace Project3.Data.Service
         #region 更新内容
         public async Task<Contents> UpdateAsync(Contents _contents)
         {
-
+            _contents = XssFilter(_contents);
             if (_contents.cid > 0)
             {
                 return await _project3DB.UpdateAsync(_contents);
@@ -210,6 +222,31 @@ namespace Project3.Data.Service
                 .ToListAsync();
             return data;
         }
+
+
         #endregion
+        public async Task<int> CountAsync(int type)
+        {
+            if (type > -1)
+            {
+                return await _project3DB.Contents.Where(m => m.type == type).CountAsync();
+            }
+            else
+            {
+                return await _project3DB.Contents.CountAsync();
+
+            }
+        }
+        public async Task UpdateReadnumAsync(int cid, int add)
+        {
+            var content = await GetByCidAsync(cid);
+            if (content != null)
+            {
+                content.readnum += add;
+                await _project3DB.UpdateAsync(content);
+            }
+        }
+
+
     }
 }

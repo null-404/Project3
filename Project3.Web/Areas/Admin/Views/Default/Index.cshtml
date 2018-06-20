@@ -1,7 +1,26 @@
-﻿
+﻿@model Project3.Web.Areas.Admin.Models.DefaultIndexViewModel;
 @{
     ViewData["Title"] = "控制台";
 }
+<style>
+    .comments{
+        padding:0;
+    }
+    .comments li{
+        list-style-type:none;
+    }
+</style>
+<h3>文章 <em>@Model.TotalArticles</em> ，页面 <em>@Model.TotalPages</em> ，评论 <em>@Model.TotalComments</em></h3>
 
+<h4 style="font-weight:bold;margin:20px 0;">最新评论</h4>
 
+<ul class="comments">
+    @{
+        foreach (var comment in Model.Comments)
+        {
 
+    <li><label>@Html.Raw(comment.nickname)：</label>@Html.Raw(comment.content)，@comment.createtime</li>
+        }
+    }
+
+</ul>

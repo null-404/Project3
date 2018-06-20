@@ -272,7 +272,7 @@ header {
     header .logo-link {
         float: left
     }
-
+  
     header .nav {
         float: right;
         left: 80px
@@ -935,3 +935,10 @@ textarea.form-control {
     .btn-primary:hover {
         background-color: #22bd77;
     }
+
+.banner {
+   
+}
+.banner img{
+    width:100%;
+}
