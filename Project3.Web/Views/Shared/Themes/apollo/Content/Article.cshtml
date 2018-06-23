@@ -5,6 +5,8 @@
     ViewData["Title"] = "apollo";
 
     Layout = "~/Views/Shared/Themes/apollo/_Layout.cshtml";
+
+    var options = ViewData["options"] as Project3.Data.Models.OptionsModel;
 }
 @{
     if (!string.IsNullOrEmpty(Model.content.banner))
@@ -67,8 +69,8 @@
         var content = document.getElementById("content");
         var html = converter.makeHtml(content.innerHTML);
         content.innerHTML = html;
-
-        comments(@Model.content.cid, "comments", "toreply", "form","loadmore");
+        //评论配置：内容CID，(comments)父级评论UL ID，(toreply)显示回复状态元素ID，(form)表单元素ID，(loadmore)父级评论加载更多元素ID，(INT)父级评论默认显示多少条子级评论，（INT)每次加载多少条父级评论/子级评论
+        comments(@Model.content.cid, "comments", "toreply", "form","loadmore",2,@options.commentslistsize);
     </script>
 
 

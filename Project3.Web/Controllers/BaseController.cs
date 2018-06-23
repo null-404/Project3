@@ -5,18 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Project3.Data.Service.Interface;
-using Project3.Web.Controllers.Attributes;
+using Project3.Web.Attributes;
 using Project3.Web.Filters;
+using Project3.Web.Models;
+using Project3.Web.Widget;
 
 namespace Project3.Web.Controllers
 {
-    [DataError]
+  
+    [MessageWidget]
     [ActionErrorFilter]
     public class BaseController : Controller
     {
-        public bool IsError { get; set; } = false;
-        public string ErrorTitle { get; set; } = "遇到了一个错误";
-        public string ErrorContent { get; set; } = "服务器内部错误，请返回。";
+        /// <summary>
+        /// Action Message消息提示
+        /// </summary>
+        public Message Message { get; set; } = new Message();
        
+        /// <summary>
+        /// 用户IP
+        /// </summary>
+        public string RemoteIP
+        {
+
+            get
+            {
+                return Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+        }
     }
 }

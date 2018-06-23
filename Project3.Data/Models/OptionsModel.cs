@@ -48,5 +48,9 @@ namespace Project3.Data.Models
         /// </summary>
         public string theme { get; set; } = "apollo";
 
+        /// <summary>
+        /// 评论提交冷却时间（单位秒）
+        /// </summary>
+        public string postcommentscd { get; set; } = "60";
     }
 }

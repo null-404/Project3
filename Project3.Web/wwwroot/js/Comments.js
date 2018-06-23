@@ -1,4 +1,4 @@
-﻿var comments = function (cid, commentsid, toreplyid, formid, loadmoreid) {
+﻿var comments = function (cid, commentsid, toreplyid, formid, loadmoreid, defaultchildcommetnssize, commentslistsize) {
 
     var pageindex = 0;
     var totalpages = 0;
@@ -23,7 +23,7 @@
 
             }
         }
-
+        //取消回复
         var cancle = document.getElementById(formid);
         if (cancle != null) {
             cancle.onclick = function (ev) {
@@ -47,10 +47,8 @@
 
             $.ajax({
                 type: "get",
-                url: "/commentsapi/get?cid=" + cid + "&page=" + pageindex,
-                success: function (data) {
-                    console.log(data);
-                  
+                url: "/commentsapi/get?cid=" + cid + "&page=" + pageindex + "&pagesize=" + commentslistsize,
+                success: function (data) {                  
                     //重置加载状态
                     isloading = false;
                     if (data.hasnextpage) {
@@ -65,7 +63,6 @@
 
                     totalpages = data.totalpages;
 
-                    isloading = false;
                     $.each(data.comments, function (i, c) {
 
                         var childhtml = '<ul class="commentitems"></ul>';
@@ -82,17 +79,20 @@
             });
         }
     }
-
+    //点击加载更多父级评论
+    $("#" + loadmoreid + " a").on("click", function () {
+        LoadParentComments();
+    });
    
 
     function LoadDefaultChildComments(coid) {
-        //每条父级评论加载2条子级评论
-        LoadChildComments(coid, 2, 1);
+        //每条父级评论加载x条子级评论
+        LoadChildComments(coid, defaultchildcommetnssize, 1);
     }
 
     //加载子级评论
     function LoadChildComments(coid, pagesize, page, skip) {
-
+        
         $.ajax({
             type: "get",
             dataType: "Json",
@@ -100,12 +100,10 @@
 
             success: function (data) {
                 var childmore = '';
-
-                //$("li[data-coid=" + coid + "] ul #childmore").remove();
-
-
+                 //如果存在下页则添加加载更多按钮
                 if (data.hasnextpage) {
-                    if (pagesize == 2) {
+
+                    if (typeof skip == "undefined") {
                         page = 0;
                     }
                     childmore = '<li id="childmore"><label><a href="javascript:void;" data-page="' + page + '" data-coid="' + coid + '" data-action="loadchildcomments">更多' + data.hascount + '条回复</a></label></li>';
@@ -133,18 +131,15 @@
         $("#childmore a").unbind("click").click(function () {
             $(this).parent().parent().remove();
             var page = ($(this).data("page") + 1);
-            //每次加载10条评论，跳过前面2条（因为默认加载了2条
-            LoadChildComments($(this).data("coid"), 10, page, 2);
+            //每次加载commentslistsize条评论，跳过前面defaultchildcommetnssize条（因为默认加载了x条
+            LoadChildComments($(this).data("coid"), commentslistsize, page, defaultchildcommetnssize);
 
         });
     }
 
-    //点击加载更多->一级评论
-    $("#" + loadmoreid + " a").on("click", function () {
-        LoadParentComments();
-    });
+    
 
-
+    //数据html拼装
     function getCommentsHtml(data, child) {
         if (typeof child == "undefined") {
             child = "";

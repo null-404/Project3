@@ -135,7 +135,13 @@
                     </button>
                     <ul class="dropdown-menu action" aria-labelledby="dropdownMenuButton">
                         <li>
-                            <a data-tip="请确认是否删除所选内容" asp-action="Delete_Post">删除</a>
+                            <a data-tip="请确认是否删除所选内容" asp-action="Action_Post" asp-route-m="delete">删除</a>
+                        </li>
+                        <li>
+                            <a data-tip="请确认是变更所选内容为显示状态" asp-action="Action_Post" asp-route-m="status0">显示</a>
+                        </li>
+                        <li>
+                            <a data-tip="请确认是变更所选内容为隐藏状态" asp-action="Action_Post" asp-route-m="status1">隐藏</a>
                         </li>
                     </ul>
                 </div>

@@ -19,10 +19,7 @@ namespace Project3.Web.Areas.Admin.Controllers
             this.mms = mms;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
 
         #region 视图-内容管理列表界面
         public async Task<IActionResult> List(int mid, int type = 0, int pageindex = 1)

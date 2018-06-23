@@ -6,6 +6,7 @@ using System.Text.Unicode;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -103,12 +104,17 @@ namespace Project3.Web
             //页面 缓存服务
             services.AddTransient<IPageCache, PageCache>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //Action操作冷却服务
+            services.AddTransient<IActionCooldownService, ActionCooldownService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
         {
             //数据库初始发
             dbInitializer.Initialize();
+
+            //暂时只处理controller中的异常（2018年6月22日
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -140,14 +146,31 @@ namespace Project3.Web
             name: "areas",
             template: "{area:exists}/{controller=Default}/{action=Index}/{id?}"
           );
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Default}/{action=Index}/{id?}");
-                //routes.MapRoute(
-                // name: "test",
-                // template: "test/{id}",
-                // defaults: new { controller = "content", action = "test" });
 
+                routes.MapRoute(
+                 name: "首页",
+                 template: "",
+                 defaults: new { controller = "Default", action = "Index" });
+                routes.MapRoute(
+                 name: "文章路由",
+                 template: "article/{cid}.html",
+                 defaults: new { controller = "Content", action = "Article" });
+                routes.MapRoute(
+                 name: "页面路由",
+                 template: "page/{cid}.html",
+                 defaults: new { controller = "Content", action = "Page" });
+                routes.MapRoute(
+                name: "归档路由",
+                template: "archives.html",
+                defaults: new { controller = "Archives", action = "Index" });
+                routes.MapRoute(
+                name: "分类&标签路由",
+                template: "metas.html",
+                defaults: new { controller = "Metas", action = "Index" });
+                routes.MapRoute(
+                name: "其他操作路由",
+                template: "{controller}/{action}",
+                defaults: new { controller = "Default", action = "Index" });
             });
 
 

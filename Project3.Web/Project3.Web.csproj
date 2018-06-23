@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\files\**" />
+    <Content Remove="wwwroot\files\**" />
+    <EmbeddedResource Remove="wwwroot\files\**" />
+    <None Remove="wwwroot\files\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Project3Database.db" />
   </ItemGroup>
 
@@ -22,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>

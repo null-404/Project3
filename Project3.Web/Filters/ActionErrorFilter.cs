@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Project3.Web.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 namespace Project3.Web.Filters
 {
     /// <summary>
-    /// 错误拦截
+    /// Action 错误拦截
     /// </summary>
     public class ActionErrorFilter : TypeFilterAttribute
     {
 
         public ActionErrorFilter() : base(typeof(ActionErrorFilterImpl))
         {
-
+            Order = 1;
         }
 
 
@@ -34,14 +35,18 @@ namespace Project3.Web.Filters
             {
                 _hostingEnvironment = hostingEnvironment;
                 _modelMetadataProvider = modelMetadataProvider;
-
             }
 
             public override void OnException(ExceptionContext context)
             {
+
                 if (_hostingEnvironment.IsDevelopment())
                 {
                     // do nothing
+                    return;
+                }
+                if (context.Exception is MessageException)
+                {
                     return;
                 }
                 var result = new ViewResult { ViewName = "_Error" };

@@ -34,7 +34,13 @@ namespace Project3.Data.Service
                     option.value = value.ToString();
                     _project3DB.Options.Update(option);
                 }
-
+                else if (IsHasOptionName(name))
+                {
+                    option = new Options();
+                    option.name = name;
+                    option.value = value.ToString();
+                    _project3DB.Options.Add(option);
+                }
             }
             return await _project3DB.SaveChangesAsync();
         }
@@ -53,6 +59,7 @@ namespace Project3.Data.Service
                     pi.SetValue(data, option.value);
                 }
 
+
             }
 
             return data;
@@ -67,6 +74,13 @@ namespace Project3.Data.Service
                 {
                     option.value = d.Value.ToString();
                     _project3DB.Options.Update(option);
+                }
+                else if(IsHasOptionName(d.Key))
+                {
+                    option = new Options();
+                    option.name = d.Key;
+                    option.value = d.Value.ToString();
+                    _project3DB.Options.Add(option);
                 }
             }
             return await _project3DB.SaveChangesAsync();
@@ -91,8 +105,30 @@ namespace Project3.Data.Service
 
                 _project3DB.Options.Add(option);
             }
-           await _project3DB.SaveChangesAsync();
+            await _project3DB.SaveChangesAsync();
         }
+
+        #region 扩展方法
+        /// <summary>
+        /// 是否存在配置项名
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool IsHasOptionName(string name)
+        {
+            var data = new OptionsModel();
+            Type t = data.GetType();
+            foreach (var pi in t.GetProperties())
+            {
+
+                if (pi.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
     }
 
 }

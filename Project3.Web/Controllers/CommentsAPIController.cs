@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Project3.Data.Service.Interface;
-using Project3.Web.Controllers.Attributes;
+using Project3.Web.Attributes;
 using Project3.Web.Models;
 
 namespace Project3.Web.Controllers
@@ -35,18 +35,10 @@ namespace Project3.Web.Controllers
                 rd.pageindex = data.PageIndex;
                 rd.hascount = data.HasCount;
             }
-            //return Json(rd);
-            //return Json(PartialView("Themes/" + options.theme + "/CommentsAPI/Comments", data));
 
             return Json(rd);
         }
 
-        //[Theme]
-        //public async Task<PartialViewResult> Comments(int coid)
-        //{
-        //    var options = await optionsCache.Get();
-        //    var comments = await coms.GetAsync(coid);
-        //    return PartialView("Themes/" + options.theme + "/CommentsAPI/Comments", comments);
-        //}
+       
     }
 }

@@ -225,6 +225,8 @@ namespace Project3.Data.Service
 
 
         #endregion
+
+        #region 统计指定类型内容
         public async Task<int> CountAsync(int type)
         {
             if (type > -1)
@@ -237,6 +239,9 @@ namespace Project3.Data.Service
 
             }
         }
+        #endregion
+
+        #region 通过标识ID更新内容阅读数
         public async Task UpdateReadnumAsync(int cid, int add)
         {
             var content = await GetByCidAsync(cid);
@@ -247,6 +252,22 @@ namespace Project3.Data.Service
             }
         }
 
+
+        #endregion
+
+        public async Task<int> SetStatusByCidAsync(int[] cid, int status)
+        {
+            foreach (int id in cid)
+            {
+                var content = await _project3DB.Contents.Where(m => m.cid == id).SingleOrDefaultAsync();
+                if (content != null)
+                {
+                    content.status = status;
+                    _project3DB.Contents.Update(content);
+                }
+            }
+            return await _project3DB.SaveChangesAsync();
+        }
 
     }
 }

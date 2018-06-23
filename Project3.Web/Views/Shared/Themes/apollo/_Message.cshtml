@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>@ViewData["Message.Title"]</title>
    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="short icon" href="~/theme/apollo/favicon.png">
@@ -20,8 +20,8 @@
     <div class="wrap">
        
         <section class="container">
-            <h2>@ViewData["ErrorTitle"]</h2>
-            <p>@ViewData["ErrorContent"]</p>
+            <h2>@ViewData["Message.Title"]</h2>
+            <p>@ViewData["Message.Content"]</p>
         </section>
         
     </div>

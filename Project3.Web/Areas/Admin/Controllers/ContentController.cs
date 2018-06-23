@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +9,6 @@ using Project3.Data.Service.Interface;
 using Project3.Extensions;
 using Project3.Web.Areas.Admin.Filters;
 using Project3.Web.Areas.Admin.Models;
-using Project3.Web.Models;
 
 namespace Project3.Web.Areas.Admin.Controllers
 {
@@ -29,10 +26,7 @@ namespace Project3.Web.Areas.Admin.Controllers
             this.fms = fms;
             this.hostingEnvironment = hostingEnvironment;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+
 
         #region 视图-内容管理列表界面
         public async Task<IActionResult> List(string searchstring, int category, int pageindex = 1, int status = -1, int type = 0)
@@ -59,13 +53,33 @@ namespace Project3.Web.Areas.Admin.Controllers
         [Alert]
         [HttpPost]
         [HttpGet]
-        public async Task<IActionResult> Delete_Post(int type, params int[] cid)
+        public async Task<IActionResult> Action_Post(string m, int type, params int[] cid)
         {
-           
-            int x = await cms.DeleteByCidAsync(cid);
+            Alert.Content = string.Format(m + "/" + type + "/" + cid.Length);
+
+            int x = 0;
+            switch (m)
+            {
+                case "delete":
+                    x = await cms.DeleteByCidAsync(cid);
+                    break;
+                case "status0":
+                    x = await cms.SetStatusByCidAsync(cid, 0);
+                    break;
+                case "status1":
+                    x = await cms.SetStatusByCidAsync(cid, 1);
+
+                    break;
+            }
+
+
+
+
             if (x > 0)
             {
-                Alert.Content = string.Format("成功删除 {0} 条数据", x);
+                Alert.Content = string.Format("成功操作 {0} 条数据", x);
+                Alert.Level = AlertModel.AlertType.Success;
+
             }
             else
             {

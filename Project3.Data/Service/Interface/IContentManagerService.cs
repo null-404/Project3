@@ -17,7 +17,19 @@ namespace Project3.Data.Service.Interface
 
         Task<PaginatedList<Contents>> GetContentsAsync(int status, string searchstring, int category, int? pageindex, int pagesize, int type);
 
+        /// <summary>
+        /// 通过标识ID批量删除内容，返回成功删除条数
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <returns></returns>
         Task<int> DeleteByCidAsync(int[] cid);
+
+        /// <summary>
+        /// 通过标识ID批量设置内容状态，返回成功操作条数
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <returns></returns>
+        Task<int> SetStatusByCidAsync(int[] cid, int status);
 
         Task<Contents> GetByCidAsync(int cid, bool isadmin = true);
 

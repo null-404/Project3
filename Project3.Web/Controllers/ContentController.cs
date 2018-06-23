@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Project3.Data.Enums;
 using Project3.Data.Models;
 using Project3.Data.Service.Interface;
-using Project3.Web.Controllers.Attributes;
+using Project3.Web.Attributes;
+using Project3.Web.Filters;
 using Project3.Web.Models.ContentVM;
 
 namespace Project3.Web.Controllers
@@ -23,12 +25,15 @@ namespace Project3.Web.Controllers
         private readonly ICommentManagerService coms;
         private readonly IPageCache pageCache;
         private readonly IOptionsCache optionsCache;
-        public ContentController(IContentManagerService cms, ICommentManagerService coms, IPageCache pageCache, IOptionsCache optionsCache)
+        private readonly IActionCooldownService _actioncd;
+        public ContentController(IContentManagerService cms, ICommentManagerService coms, IPageCache pageCache, IOptionsCache optionsCache
+            , IActionCooldownService _actioncd)
         {
             this.cms = cms;
             this.coms = coms;
             this.pageCache = pageCache;
             this.optionsCache = optionsCache;
+            this._actioncd = _actioncd;
         }
         #region 文章
         [Theme]
@@ -39,20 +44,19 @@ namespace Project3.Web.Controllers
             VM.content = await cms.GetByCidAsync(cid, false);
             if (VM.content == null)
             {
-                IsError = true;
-                ErrorContent = "内容似乎已经丢失，请返回首页。";
+
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "内容似乎已经丢失，请返回首页。"
+                });
             }
-            else
-            {
-                VM.metas = await cms.GetMetasAsync(cid);
-                //获取评论
-                //VM.comments = await coms.GetListAsync(cid);
-                ViewData.Model = VM;
-                //阅读计数
-                //VM.content.readnum++;
-                //await cms.UpdateAsync(VM.content);
-                await cms.UpdateReadnumAsync(cid, 1);
-            }
+
+            VM.metas = await cms.GetMetasAsync(cid);
+
+            ViewData.Model = VM;
+
+            await cms.UpdateReadnumAsync(cid, 1);
+
 
             return View();
         }
@@ -66,81 +70,98 @@ namespace Project3.Web.Controllers
             VM.content = await pageCache.GetByCid(cid);
             if (VM.content == null)
             {
-                IsError = true;
-                ErrorContent = "页面似乎已经丢失了，请返回首页。";
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "页面似乎已经丢失，请返回首页。"
+                });
             }
-            else
-            {
-                ViewData.Model = VM;
-               
-            }
+
+            ViewData.Model = VM;
+
+
             return View();
         }
         #endregion
 
 
         #region 评论提交
+        [ActionCooldownFilter(ActionCooldownType.CommentsPost)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment_Post(int cid, int type, int parentcoid, string nickname, string email, string content)
         {
+            
             var options = await optionsCache.Get();
             if (options.allowcomments == "1")
             {
-                IsError = true;
-                ErrorContent = "站点评论功能已关闭，请返回。";
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "站点评论功能已关闭，请返回。"
+                });
             }
             var contentdata = await cms.GetByCidAsync(cid, false);
             if (contentdata == null)
             {
-                IsError = true;
-                ErrorContent = "评论的内容似乎已经丢失，请返回。";
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "评论的内容似乎已经丢失，请返回。"
+                });
 
             }
             else if (contentdata.allowcomment == 1)
             {
-                IsError = true;
-                ErrorContent = "内容评论功能已关闭，请返回。";
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "内容评论功能已关闭，请返回。"
+                });
             }
 
-            if (!IsError)
+
+            var comment = new Comments();
+            comment.cid = cid;
+            comment.nickname = nickname;
+            comment.mail = email;
+            comment.content = content;
+            comment.createtime = DateTime.Now;
+            comment.parentcoid = 0;
+
+
+            if (parentcoid > 0)
             {
-                var comment = new Comments();
-                comment.cid = cid;
-                comment.nickname = nickname;
-                comment.mail = email;
-                comment.content = content;
-                comment.createtime = DateTime.Now;
-                comment.parentcoid = 0;
-
-
-                if (parentcoid > 0)
+                var parentcomment = await coms.GetAsync(parentcoid);
+                if (parentcomment == null)
                 {
-                    var parentcomment = await coms.GetAsync(parentcoid);
-                    if (parentcomment == null)
+                    Message.Show(new Widget.MessageModel()
                     {
-                        IsError = true;
-                        ErrorContent = "回复的评论已被删除，请返回重新提交。";
-                    }
-                    else
-                    {
-                        comment.parentcoid = parentcomment.parentcoid == 0 ? parentcoid : parentcomment.parentcoid;
-                        comment.reply = parentcomment.nickname;
-                    }
-                }
-                if (TryValidateModel(comment))
-                {
-                    await coms.AddAsync(comment);
+                        Content = "回复的评论已被删除，请返回重新提交。"
+                    });
+                 
                 }
                 else
                 {
-                    IsError = true;
-                    ErrorContent = "输入有误，请返回重新提交。";
+                    comment.parentcoid = parentcomment.parentcoid == 0 ? parentcoid : parentcomment.parentcoid;
+                    comment.reply = parentcomment.nickname;
                 }
-                return RedirectToAction(type == 0 ? nameof(Article) : nameof(Page), new { cid });
             }
-            return View();
+            if (TryValidateModel(comment))
+            {
+                //设置冷却时间
+                _actioncd.SetCooldown(ActionCooldownType.CommentsPost, RemoteIP);
+                await coms.AddAsync(comment);
+                
+            }
+            else
+            {
+                Message.Show(new Widget.MessageModel()
+                {
+                    Content = "输入有误，请返回重新提交。"
+                });
             
+            }
+            return RedirectToAction(type == 0 ? nameof(Article) : nameof(Page), new { cid });
+
+
+
         }
         #endregion
 

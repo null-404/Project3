@@ -43,6 +43,10 @@
                 <label for="name">评论列表显示条数</label>
                 <input type="number" class="form-control" placeholder="" value="@Model.options.commentslistsize" name="commentslistsize">
             </div>
+            <div class="form-group">
+                <label for="name">评论提交冷却时间（单位秒）</label>
+                <input type="number" class="form-control" placeholder="" value="@Model.options.postcommentscd" name="postcommentscd">
+            </div>
             <div class="checkbox">
                 <label>
                     <input type="hidden" name="allowcomments" id="allowcomments" value="@Model.options.allowcomments" />

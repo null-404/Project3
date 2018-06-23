@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project3.Data.Service.Interface;
-using Project3.Web.Controllers.Attributes;
+using Project3.Web.Attributes;
 using Project3.Web.Models.DefaultVM;
 
 namespace Project3.Web.Controllers
@@ -14,16 +15,20 @@ namespace Project3.Web.Controllers
         private readonly IContentManagerService cms;
         private readonly IOptionsCache optionsCache;
         private readonly IMetasManagerService mms;
-        public DefaultController(IContentManagerService cms, IOptionsCache optionsCache, IMetasManagerService mms)
+        private readonly ICache cache;
+        public DefaultController(IContentManagerService cms, IOptionsCache optionsCache, IMetasManagerService mms,ICache cache)
         {
             this.cms = cms;
             this.optionsCache = optionsCache;
             this.mms = mms;
+            this.cache = cache;
         }
 
         [Theme]
         public async Task<IActionResult> Index(string search, int? mid, int pageindex = 1)
         {
+       
+
             var options = await optionsCache.Get();
             var VM = new IndexViewModel();
             VM.search = search;
@@ -38,5 +43,6 @@ namespace Project3.Web.Controllers
 
             return View();
         }
+
     }
 }

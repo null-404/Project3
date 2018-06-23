@@ -12,6 +12,7 @@ namespace Project3.Data.Service.Interface
 
         void Remove(string name);
 
+        void Set(string name, object value, long outtime);
         //void Update(string name, object value);
     }
 }

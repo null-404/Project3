@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Project3.Data.Service.Interface;
+using Project3.Web.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project3.Web.Controllers.Attributes
+namespace Project3.Web.Attributes
 {
     /// <summary>
     /// 主题特性

@@ -87,7 +87,7 @@ namespace Project3.Data.Service
 
         public async Task<PaginatedList<CommentJsonModel>> GetAjaxPageListAsync(int cid, int? page, int pagesize, int parentcoid, int skip)
         {
-            var content = await _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
+             var content = await _project3DB.Contents.Where(m => m.cid == cid && m.status == 0).SingleOrDefaultAsync();
             if (content != null && content.allowcomment == 0)
             {
 

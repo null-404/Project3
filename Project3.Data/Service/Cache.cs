@@ -39,5 +39,12 @@ namespace Project3.Data.Service
 
             return cacheEntry;
         }
+
+        public void Set(string name, object value, long outtime)
+        {
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+           .SetAbsoluteExpiration(TimeSpan.FromSeconds(outtime));
+            memoryCache.Set(name, value, cacheEntryOptions);
+        }
     }
 }

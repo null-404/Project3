@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Project3.Data.Models;
 using Project3.Data.Service.Interface;
@@ -24,7 +25,8 @@ namespace Project3.Web.Areas.Admin.Controllers
         private readonly IPageCache pageCache;
         private readonly IContentManagerService cms;
         private readonly ICommentManagerService coms;
-        public DefaultController(IUsersManagerService ums, IPageCache pageCache, IOptionsCache optionsCache, IContentManagerService cms, ICommentManagerService coms)
+ 
+        public DefaultController( IUsersManagerService ums, IPageCache pageCache, IOptionsCache optionsCache, IContentManagerService cms, ICommentManagerService coms)
         {
             this.ums = ums;
             this.pageCache = pageCache;
@@ -34,6 +36,7 @@ namespace Project3.Web.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
+
             var VM = new DefaultIndexViewModel();
             VM.TotalArticles = await cms.CountAsync(0);
             VM.TotalPages = await cms.CountAsync(1);

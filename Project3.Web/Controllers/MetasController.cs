@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project3.Data.Service.Interface;
-using Project3.Web.Controllers.Attributes;
+using Project3.Web.Attributes;
 using Project3.Web.Models.MetasVM;
 
 namespace Project3.Web.Controllers
